@@ -8,7 +8,6 @@ import com.google.gson.GsonBuilder;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import netscape.javascript.JSObject;
-import org.json.JSONObject;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import ru.job4j.kitchen.domain.Order;
