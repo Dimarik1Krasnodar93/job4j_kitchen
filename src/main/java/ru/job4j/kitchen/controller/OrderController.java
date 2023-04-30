@@ -10,9 +10,9 @@ import ru.job4j.kitchen.service.KitchenService;
 @RequestMapping("/order")
 public class OrderController {
     KitchenService kitchenService;
-    @PostMapping("/")
+    @PostMapping("/create")
     public void create(@RequestBody Order order) {
-        kitchenService.receiveOrder(order);
+        //kitchenService.receiveOrder(order);
     }
 
 }

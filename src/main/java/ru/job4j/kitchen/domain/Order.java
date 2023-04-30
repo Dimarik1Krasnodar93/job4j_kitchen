@@ -7,7 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-@Entity(name = "job4j_order")
+@Entity(name = "job4j_orders")
 @Data
 public class Order {
     @Id
