@@ -12,7 +12,7 @@ public class OrderController {
     KitchenService kitchenService;
     @PostMapping("/create")
     public void create(@RequestBody Order order) {
-        //kitchenService.receiveOrder(order);
+
     }
 
 }
