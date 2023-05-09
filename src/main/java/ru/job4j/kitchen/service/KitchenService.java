@@ -9,19 +9,41 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import netscape.javascript.JSObject;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import ru.job4j.kitchen.domain.Order;
+import ru.job4j.kitchen.dto.Status;
 import ru.job4j.kitchen.repository.OrderRepository;
+
+import java.util.List;
 
 @AllArgsConstructor
 @Service
 @Slf4j
 public class KitchenService {
+    private final KafkaTemplate<String, Object> kafkaTemplate;
     OrderRepository orderRepository;
-    @KafkaListener(topics = "job4j_orders2")
+    private static final int DISH_TO_CANCEL = 6;
+    @KafkaListener(topics = "job4j_orders_1")
     public void receiveOrder(String orderStr) {
         Gson gson = new GsonBuilder().create();
         Order order = gson.fromJson(orderStr, Order.class);
-        orderRepository.save(order);
+        List<Order> listOrder = orderRepository.findOrdersByDishId(order.getDishId());
+        if (listOrder.size() == 0) {
+            order.setStatus(Status.MADE);
+            orderRepository.save(order);
+        } else {
+            if (order.getDishId() == DISH_TO_CANCEL) {
+                order.setStatus(Status.CANCEL);
+            } else {
+                order.setStatus(Status.CREATED);
+            }
+        }
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            kafkaTemplate.send("cooked_order", objectMapper.writeValueAsString(order));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
     }
 }

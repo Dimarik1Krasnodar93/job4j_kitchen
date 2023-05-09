@@ -1,0 +1,1 @@
+ALTER TABLE job4j_orders ADD status int;
