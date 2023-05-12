@@ -24,10 +24,11 @@ public class KitchenService {
     private final KafkaTemplate<String, Object> kafkaTemplate;
     OrderRepository orderRepository;
     private static final int DISH_TO_CANCEL = 6;
-    @KafkaListener(topics = "job4j_orders_1")
-    public void receiveOrder(String orderStr) {
-        Gson gson = new GsonBuilder().create();
-        Order order = gson.fromJson(orderStr, Order.class);
+    @KafkaListener(topics = "job4j_orders_2")
+    public void receiveOrder(ru.job4j.kitchen.dto.Order orderDto) {
+        Order order = new Order();
+        order.setId(orderDto.getId());
+        order.setDishId(orderDto.getDishId());
         List<Order> listOrder = orderRepository.findOrdersByDishId(order.getDishId());
         if (listOrder.size() == 0) {
             order.setStatus(Status.MADE);
